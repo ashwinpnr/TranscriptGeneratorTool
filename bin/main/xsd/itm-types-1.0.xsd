@@ -1,0 +1,666 @@
+<?xml version="1.0"?>
+<!-- edited with XMLSpy v2012 rel. 2 sp1 (x64) (http://www.altova.com) by Manoj (Actiance) -->
+<!--
+	schema design:							Jeffrey T. Lucas, Principal Architect
+	date:											Sat Mar 23 18:44:16 PDT 2013
+	verion:										1.0.0-20130323
+-->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:cmn-adt-base="http://adt.cmn.xmlns.commons.platform.actiance.com/base/1.0" xmlns:cmn-adt-system="http://adt.cmn.xmlns.commons.platform.actiance.com/system/1.0" xmlns:itm-types="http://dig.apc.xmlns.commons.platform.actiance.com/itm/interaction/types/1.0" targetNamespace="http://dig.apc.xmlns.commons.platform.actiance.com/itm/interaction/types/1.0" elementFormDefault="qualified" attributeFormDefault="unqualified">
+	<xs:import namespace="http://adt.cmn.xmlns.commons.platform.actiance.com/base/1.0" schemaLocation="../../../actiance.commons/datatypes/cmn-dt-base-1.0.xsd"/>
+	<xs:import namespace="http://adt.cmn.xmlns.commons.platform.actiance.com/system/1.0" schemaLocation="../../../actiance.commons/datatypes/cmn-dt-system-1.0.xsd"/>
+
+	<xs:simpleType name="Action">
+		<xs:annotation>
+			<xs:documentation>Event action on object</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="create"/>
+			<xs:enumeration value="update"/>
+			<xs:enumeration value="delete"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="IndexableAttributes">
+		<xs:sequence>
+			<xs:element name="attribute" maxOccurs="unbounded">
+				<xs:annotation>
+					<xs:documentation>Attribute value</xs:documentation>
+				</xs:annotation>
+				<xs:complexType>
+					<xs:simpleContent>
+						<xs:extension base="xs:string">
+							<xs:attribute name="name" use="required">
+								<xs:annotation>
+									<xs:documentation>Attribute name</xs:documentation>
+								</xs:annotation>
+								<xs:simpleType>
+									<xs:restriction base="xs:string">
+										<xs:minLength value="1"/>
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:attribute>
+							<xs:attribute name="content-type" type="itm-types:MimeType" default="text/plain">
+								<xs:annotation>
+									<xs:documentation>Text content type</xs:documentation>
+								</xs:annotation>
+							</xs:attribute>
+							<xs:attribute ref="itm-types:indexable"/>
+							<xs:attribute name="user-visible" type="itm-types:UserVisibility" default="always visible">
+								<xs:annotation>
+									<xs:documentation>User visibility setting</xs:documentation>
+								</xs:annotation>
+							</xs:attribute>
+						</xs:extension>
+					</xs:simpleContent>
+				</xs:complexType>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="GeneralAttributes">
+		<xs:sequence>
+			<xs:element name="attribute" maxOccurs="unbounded">
+				<xs:annotation>
+					<xs:documentation>Attribute value</xs:documentation>
+				</xs:annotation>
+				<xs:complexType>
+					<xs:simpleContent>
+						<xs:extension base="xs:string">
+							<xs:attribute name="name" use="required">
+								<xs:annotation>
+									<xs:documentation>Attribute name</xs:documentation>
+								</xs:annotation>
+								<xs:simpleType>
+									<xs:restriction base="xs:string">
+										<xs:minLength value="1"/>
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:attribute>
+							<xs:attribute name="content-type" type="xs:string" default="text/plain">
+								<xs:annotation>
+									<xs:documentation>Text content type</xs:documentation>
+								</xs:annotation>
+							</xs:attribute>
+						</xs:extension>
+					</xs:simpleContent>
+				</xs:complexType>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="channel" type="itm-types:Channel">
+		<xs:annotation>
+			<xs:documentation>Communication channel</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	<xs:simpleType name="Channel">
+		<xs:annotation>
+			<xs:documentation>Communication channel</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:minLength value="1"/>
+			<xs:maxLength value="128"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="ClusterID">
+		<xs:restriction base="xs:string">
+			<xs:whiteSpace value="collapse"/>
+			<xs:maxLength value="128"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="display-id">
+		<xs:restriction base="xs:string">
+			<xs:pattern value="\d\d\d\d-(\d)+"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:element name="employee-id" type="xs:string">
+		<xs:annotation>
+			<xs:documentation>Employee ID</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	<xs:simpleType name="Encoding">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="base64"/>
+			<xs:enumeration value="text"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:element name="endpoint-id">
+		<xs:annotation>
+			<xs:documentation>Network endpoint ID</xs:documentation>
+		</xs:annotation>
+		<xs:simpleType>
+			<xs:restriction base="xs:string">
+				<xs:minLength value="1"/>
+			</xs:restriction>
+		</xs:simpleType>
+	</xs:element>
+	<xs:simpleType name="EventID">
+		<xs:restriction base="xs:string">
+			<xs:whiteSpace value="collapse"/>
+			<xs:maxLength value="128"/>
+			<xs:minLength value="1"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:element name="event-id" type="itm-types:EventID"/>
+	<xs:simpleType name="FileEventType">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="inline"/>
+			<xs:enumeration value="attachment"/>
+			<xs:enumeration value="raw"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="GlobalOID">
+		<xs:restriction base="xs:string">
+			<xs:whiteSpace value="collapse"/>
+			<xs:minLength value="1"/>
+			<xs:maxLength value="1024"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:element name="groups">
+		<xs:annotation>
+			<xs:documentation>Groups list</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="group" type="xs:string" minOccurs="0" maxOccurs="unbounded">
+					<xs:annotation>
+						<xs:documentation>Group name</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:attribute name="indexable" type="xs:boolean" default="true">
+		<xs:annotation>
+			<xs:documentation>True if text should be indexed</xs:documentation>
+		</xs:annotation>
+	</xs:attribute>
+	<xs:complexType name="LexiconHit">
+		<xs:simpleContent>
+			<xs:extension base="xs:string">
+				<xs:attribute name="match-type" use="required">
+					<xs:annotation>
+						<xs:documentation>String comparison type</xs:documentation>
+					</xs:annotation>
+					<xs:simpleType>
+						<xs:restriction base="xs:string">
+							<xs:enumeration value="whole word"/>
+							<xs:enumeration value="starts with"/>
+							<xs:enumeration value="ends with"/>
+							<xs:enumeration value="contains"/>
+							<xs:enumeration value="regex"/>
+							<xs:enumeration value="near words"/>
+							<xs:enumeration value="near characters"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:attribute>
+				<xs:attribute name="near-distance" type="xs:integer">
+					<xs:annotation>
+						<xs:documentation>Distance between words or characters</xs:documentation>
+					</xs:annotation>
+				</xs:attribute>
+				<xs:attribute name="case-sensitive" type="xs:boolean" default="false">
+					<xs:annotation>
+						<xs:documentation>Case sensitive flag</xs:documentation>
+					</xs:annotation>
+				</xs:attribute>
+				<xs:attribute name="plain-text" type="xs:boolean" default="true">
+					<xs:annotation>
+						<xs:documentation>True if hit was on plain text</xs:documentation>
+					</xs:annotation>
+				</xs:attribute>
+				<xs:attribute name="offset" type="xs:long">
+					<xs:annotation>
+						<xs:documentation>Character offset to hit</xs:documentation>
+					</xs:annotation>
+				</xs:attribute>
+				<xs:attribute name="length" type="xs:integer">
+					<xs:annotation>
+						<xs:documentation>Length of hit</xs:documentation>
+					</xs:annotation>
+				</xs:attribute>
+				<xs:attribute name="origin" type="xs:string">
+					<xs:annotation>
+						<xs:documentation>Lexicon origin</xs:documentation>
+					</xs:annotation>
+				</xs:attribute>
+				<xs:attribute name="category" type="xs:string">
+					<xs:annotation>
+						<xs:documentation>Lexicon category</xs:documentation>
+					</xs:annotation>
+				</xs:attribute>
+				<xs:attribute name="policy" type="xs:string">
+					<xs:annotation>
+						<xs:documentation>Policy that triggered the lexicon hit</xs:documentation>
+					</xs:annotation>
+				</xs:attribute>
+			</xs:extension>
+		</xs:simpleContent>
+	</xs:complexType>
+	<xs:simpleType name="MimeType">
+		<xs:annotation>
+			<xs:documentation>content media type</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="text/plain"/>
+			<xs:enumeration value="text/html"/>
+			<xs:enumeration value="text/xml"/>
+			<xs:enumeration value="text/rtf"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:element name="modality">
+		<xs:annotation>
+			<xs:documentation>Communication channel and network</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="itm-types:channel"/>
+				<xs:element ref="itm-types:network">
+					<xs:annotation>
+						<xs:documentation>Network or product</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+			</xs:sequence>
+			<xs:attribute name="classification" type="itm-types:ModalityClass" use="optional">
+				<xs:annotation>
+					<xs:documentation>Network or product classification</xs:documentation>
+				</xs:annotation>
+			</xs:attribute>
+			<xs:attribute name="type" type="itm-types:ModalityType" use="optional">
+				<xs:annotation>
+					<xs:documentation>Types of access relevant to network</xs:documentation>
+				</xs:annotation>
+			</xs:attribute>
+			<xs:attribute name="vendor" type="xs:string">
+				<xs:annotation>
+					<xs:documentation>Product vendor</xs:documentation>
+				</xs:annotation>
+			</xs:attribute>
+			<xs:attribute name="description" type="xs:string"/>
+		</xs:complexType>
+	</xs:element>
+	<xs:simpleType name="ModalityClass">
+		<xs:annotation>
+			<xs:documentation>Modality classification</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="uc"/>
+			<xs:enumeration value="email"/>
+			<xs:enumeration value="collaboration"/>
+			<xs:enumeration value="social"/>
+			<xs:enumeration value="file archive"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="ModalityType">
+		<xs:annotation>
+			<xs:documentation>Modality type</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="public"/>
+			<xs:enumeration value="private"/>
+			<xs:enumeration value="federated"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="NameType">
+		<xs:sequence>
+			<xs:element name="first" type="xs:string" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>First name</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="middle" type="xs:string" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Middle name</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="last" type="xs:string" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Last name</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="initials" type="xs:string" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Name initials</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="display-name" type="xs:string" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Preferred display name</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="network" type="itm-types:Network">
+		<xs:annotation>
+			<xs:documentation>Network or product</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	<xs:simpleType name="Network">
+		<xs:annotation>
+			<xs:documentation>Network or product</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:minLength value="1"/>
+			<xs:maxLength value="128"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="NetworkEndpoint">
+		<xs:annotation>
+			<xs:documentation>Network endpoint</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element ref="itm-types:network">
+				<xs:annotation>
+					<xs:documentation>Network or product</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element ref="itm-types:endpoint-id"/>
+			<xs:element name="display-name" type="xs:string" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Network display name or screen name</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element ref="itm-types:groups" minOccurs="0"/>
+		</xs:sequence>
+		<xs:attribute name="endpoint-id-type" use="optional" default="login">
+			<xs:annotation>
+				<xs:documentation>Type of network endpoint ID</xs:documentation>
+			</xs:annotation>
+			<xs:simpleType>
+				<xs:restriction base="xs:string">
+					<xs:enumeration value="login"/>
+					<xs:enumeration value="phone"/>
+					<xs:enumeration value="email"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+	</xs:complexType>
+	<xs:simpleType name="OID">
+		<xs:restriction base="xs:string">
+			<xs:minLength value="1"/>
+			<xs:maxLength value="512"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:element name="subject">
+		<xs:annotation>
+			<xs:documentation>Subject, topic or title</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:simpleContent>
+				<xs:extension base="xs:string">
+					<xs:attribute name="content-type" type="itm-types:MimeType" use="optional" default="text/plain"/>
+				</xs:extension>
+			</xs:simpleContent>
+		</xs:complexType>
+	</xs:element>
+	<xs:simpleType name="TenantID">
+		<xs:restriction base="xs:string">
+			<xs:whiteSpace value="collapse"/>
+			<xs:maxLength value="128"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="text-event-type">
+		<xs:annotation>
+			<xs:documentation>Text type for display</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="normal message"/>
+			<xs:enumeration value="disclaimer message"/>
+			<xs:enumeration value="notice message"/>
+			<xs:enumeration value="warning message"/>
+			<xs:enumeration value="file transfer message"/>
+			<xs:enumeration value="participant join message"/>
+			<xs:enumeration value="participant leave message"/>
+			<xs:enumeration value="form message"/>
+			<xs:enumeration value="admin action message"/>
+			<xs:enumeration value="audio"/>
+			<xs:enumeration value="video"/>
+			<xs:enumeration value="meeting"/>
+			<xs:enumeration value="header"/>
+			<xs:enumeration value="body"/>
+			<xs:enumeration value="posting"/>
+			<xs:enumeration value="comment"/>
+			<xs:enumeration value="share"/>
+			<xs:enumeration value="subscribe"/>
+			<xs:enumeration value="add to"/>
+			<xs:enumeration value="like"/>
+			<xs:enumeration value="dislike"/>
+			<xs:enumeration value="task"/>
+			<xs:enumeration value="calendar event"/>
+			<xs:enumeration value="poll posting"/>
+			<xs:enumeration value="poll response"/>
+			<xs:enumeration value="profile"/>
+			<xs:enumeration value="attached text"/>
+			<xs:enumeration value="other"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:element name="time-frame">
+		<xs:annotation>
+			<xs:documentation>Start and end time in UTC</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="start-time" type="itm-types:TimeStamp"/>
+				<xs:element name="end-time" type="itm-types:TimeStamp">
+					<xs:annotation>
+						<xs:documentation>End-time must be greater than or equal to the start-time</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:complexType name="TimeStamp">
+		<xs:attribute name="description" use="optional"/>
+		<xs:attribute name="timestamp" type="xs:dateTime" use="required"/>
+	</xs:complexType>
+	<xs:simpleType name="TransactionScope">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="closed">
+				<xs:annotation>
+					<xs:documentation>Defines a open-close transction event that is considered distinct. It has a well defined start-time and end-time.  The signature of this time frame is considered a "closed" event.
+			</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="open"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="UserInfo">
+		<xs:annotation>
+			<xs:documentation>User</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="user-id">
+				<xs:annotation>
+					<xs:documentation>Unique user ID</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:minLength value="1"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="user-type">
+				<xs:annotation>
+					<xs:documentation>User type</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:enumeration value="internal"/>
+						<xs:enumeration value="federated"/>
+						<xs:enumeration value="public"/>
+						<xs:enumeration value="external"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="name" type="itm-types:NameType" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>User name</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="email-address" type="cmn-adt-system:EmailAddress" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Email address</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="affiliation" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Company affiliation</xs:documentation>
+				</xs:annotation>
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element ref="itm-types:employee-id" minOccurs="0"/>
+						<xs:element name="title" type="xs:string" minOccurs="0">
+							<xs:annotation>
+								<xs:documentation>Work title</xs:documentation>
+							</xs:annotation>
+						</xs:element>
+						<xs:element name="department" type="xs:string" minOccurs="0">
+							<xs:annotation>
+								<xs:documentation>Department</xs:documentation>
+							</xs:annotation>
+						</xs:element>
+						<xs:element name="division" type="xs:string" minOccurs="0">
+							<xs:annotation>
+								<xs:documentation>Division</xs:documentation>
+							</xs:annotation>
+						</xs:element>
+						<xs:element name="company" type="xs:string" minOccurs="0">
+							<xs:annotation>
+								<xs:documentation>Company</xs:documentation>
+							</xs:annotation>
+						</xs:element>
+						<xs:element name="building" type="xs:string" minOccurs="0">
+							<xs:annotation>
+								<xs:documentation>Building</xs:documentation>
+							</xs:annotation>
+						</xs:element>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="geo-location" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Geographic location</xs:documentation>
+				</xs:annotation>
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="city" type="xs:string" minOccurs="0">
+							<xs:annotation>
+								<xs:documentation>City/Location</xs:documentation>
+							</xs:annotation>
+						</xs:element>
+						<xs:element name="state" type="xs:string" minOccurs="0">
+							<xs:annotation>
+								<xs:documentation>State/Province</xs:documentation>
+							</xs:annotation>
+						</xs:element>
+						<xs:element name="country" type="xs:string" minOccurs="0">
+							<xs:annotation>
+								<xs:documentation>Country</xs:documentation>
+							</xs:annotation>
+						</xs:element>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="phone-numbers" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Phone numbers</xs:documentation>
+				</xs:annotation>
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="office-phone" type="cmn-adt-system:PhoneNumber" minOccurs="0">
+							<xs:annotation>
+								<xs:documentation>Office phone number</xs:documentation>
+							</xs:annotation>
+						</xs:element>
+						<xs:element name="secondary-office-phone" type="cmn-adt-system:PhoneNumber" minOccurs="0">
+							<xs:annotation>
+								<xs:documentation>Secondary office phone number</xs:documentation>
+							</xs:annotation>
+						</xs:element>
+						<xs:element name="mobile-phone" type="cmn-adt-system:PhoneNumber" minOccurs="0">
+							<xs:annotation>
+								<xs:documentation>Mobile phone number</xs:documentation>
+							</xs:annotation>
+						</xs:element>
+						<xs:element name="home-phone" type="cmn-adt-system:PhoneNumber" minOccurs="0">
+							<xs:annotation>
+								<xs:documentation>Home phone number</xs:documentation>
+							</xs:annotation>
+						</xs:element>
+						<xs:element name="other-phone" type="cmn-adt-system:PhoneNumber" minOccurs="0">
+							<xs:annotation>
+								<xs:documentation>Other phone number</xs:documentation>
+							</xs:annotation>
+						</xs:element>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="secondary-addresses" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Secondary endpoint addresses</xs:documentation>
+				</xs:annotation>
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="secondary-address" type="itm-types:SecondaryAddress" minOccurs="0" maxOccurs="unbounded"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element ref="itm-types:groups" minOccurs="0"/>
+			<xs:element name="image" minOccurs="0">
+				<xs:complexType>
+					<xs:simpleContent>
+						<xs:extension base="xs:base64Binary">
+							<xs:attribute name="type" use="required">
+								<xs:annotation>
+									<xs:documentation>Image type</xs:documentation>
+								</xs:annotation>
+								<xs:simpleType>
+									<xs:restriction base="xs:string">
+										<xs:enumeration value="jpeg"/>
+										<xs:enumeration value="gif"/>
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:attribute>
+						</xs:extension>
+					</xs:simpleContent>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="modification-time" type="itm-types:TimeStamp" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Modification time in UTC</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="SecondaryAddress">
+		<xs:annotation>
+			<xs:documentation>Secondary Address</xs:documentation>
+		</xs:annotation>
+		<xs:simpleContent>
+			<xs:extension base="xs:string">
+				<xs:attribute name="address-type" use="required">
+					<xs:annotation>
+						<xs:documentation>Secondary adress type designator.</xs:documentation>
+					</xs:annotation>
+					<xs:simpleType>
+						<xs:restriction base="xs:string">
+							<xs:enumeration value="smtp"/>
+							<xs:enumeration value="sip"/>
+							<xs:enumeration value="tel"/>
+							<xs:enumeration value="skype"/>
+							<xs:enumeration value="notes"/>
+							<xs:enumeration value="x.400"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:attribute>
+			</xs:extension>
+		</xs:simpleContent>
+	</xs:complexType>
+	<xs:simpleType name="UserVisibility">
+		<xs:annotation>
+			<xs:documentation>User visibility setting</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="always visible"/>
+			<xs:enumeration value="optionally visible"/>
+			<xs:enumeration value="hidden"/>
+		</xs:restriction>
+	</xs:simpleType>
+</xs:schema>

@@ -1,0 +1,734 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- edited with XMLSpy v2012 rel. 2 sp1 (x64) (http://www.altova.com) by Manoj (Actiance) -->
+<!--
+	schema design:							John Onusko, Architect
+	schema transform and updates:	Jeffrey T. Lucas, Architect
+
+	This schema is used by APC-DIG. It is a primary object model for all interacti
+	
+	on channels.
+-->
+<xs:schema xmlns:cmn-adt-base="http://adt.cmn.xmlns.commons.platform.actiance.com/base/1.0" xmlns:cmn-adt-core="http://adt.cmn.xmlns.commons.platform.actiance.com/core/1.0" xmlns:cmn-adt-system="http://adt.cmn.xmlns.commons.platform.actiance.com/system/1.0" xmlns:itm-types="http://dig.apc.xmlns.commons.platform.actiance.com/itm/interaction/types/1.0" xmlns:itm="http://dig.apc.xmlns.commons.platform.actiance.com/itm/interaction/transcript/1.0" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:itm-pol="http://dig.apc.xmlns.commons.platform.actiance.com/itm/interaction/policy/1.0" targetNamespace="http://dig.apc.xmlns.commons.platform.actiance.com/itm/interaction/transcript/1.0" elementFormDefault="qualified" attributeFormDefault="unqualified">
+	<xs:import namespace="http://adt.cmn.xmlns.commons.platform.actiance.com/base/1.0" schemaLocation="../../../actiance.commons/datatypes/cmn-dt-base-1.0.xsd"/>
+	<xs:import namespace="http://adt.cmn.xmlns.commons.platform.actiance.com/core/1.0" schemaLocation="../../../actiance.commons/datatypes/cmn-dt-core-1.0.xsd"/>
+	<xs:import namespace="http://adt.cmn.xmlns.commons.platform.actiance.com/system/1.0" schemaLocation="../../../actiance.commons/datatypes/cmn-dt-system-1.0.xsd"/>
+	<xs:import namespace="http://dig.apc.xmlns.commons.platform.actiance.com/itm/interaction/types/1.0" schemaLocation="./itm-types-1.0.xsd"/>
+	<xs:import namespace="http://dig.apc.xmlns.commons.platform.actiance.com/itm/interaction/policy/1.0" schemaLocation="./itm-policy-1.0.xsd"/>
+	<xs:element name="transcript" type="itm:Transcript"/>
+	<xs:element name="interaction" type="itm:Interaction"/>
+	<xs:complexType name="Transcript">
+		<xs:sequence>
+			<xs:element ref="itm:interaction" maxOccurs="1"/>
+			<xs:element ref="itm-pol:policy" minOccurs="0" maxOccurs="1"/>
+		</xs:sequence>
+		<xs:attribute name="id" use="required">
+			<xs:annotation>
+				<xs:documentation>Unique transcript ID</xs:documentation>
+			</xs:annotation>
+			<xs:simpleType>
+				<xs:restriction base="xs:string">
+					<xs:minLength value="1"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+		<xs:attribute name="source-endpoint-id" use="required">
+			<xs:annotation>
+				<xs:documentation>Name of product sending the data</xs:documentation>
+			</xs:annotation>
+			<xs:simpleType>
+				<xs:restriction base="xs:string">
+					<xs:minLength value="1"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+		<xs:attribute name="source-endpoint-version" type="xs:string" use="optional">
+			<xs:annotation>
+				<xs:documentation>Version of product sending the data</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="time-stamp" type="xs:dateTime" use="required">
+			<xs:annotation>
+				<xs:documentation>Time in UTC when sent by the source endpoint</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+	</xs:complexType>
+	<xs:complexType name="Interaction">
+		<xs:sequence>
+			<xs:element ref="itm-types:time-frame" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="communication-object-id" type="itm-types:OID" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Communication object ID unique within cluster</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="parent-communication-object-id" type="itm-types:OID" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Parent communication object ID unique within cluster</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="thread-object-id" type="itm-types:OID" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Thread object ID unique within cluster</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="resource-location" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Resource location</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string"/>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element ref="itm-types:modality"/>
+			<xs:element ref="itm-types:subject" minOccurs="0"/>
+			<xs:element name="attributes" type="itm-types:IndexableAttributes" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Miscellaneous interaction attributes</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="participants" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Distinct participant list</xs:documentation>
+				</xs:annotation>
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="participant" minOccurs="0" maxOccurs="unbounded">
+							<xs:complexType>
+								<xs:sequence>
+									<xs:element name="network-info" type="itm-types:NetworkEndpoint">
+										<xs:annotation>
+											<xs:documentation>Network endpoint information</xs:documentation>
+										</xs:annotation>
+									</xs:element>
+									<xs:element name="user-info" type="itm-types:UserInfo">
+										<xs:annotation>
+											<xs:documentation>User information</xs:documentation>
+										</xs:annotation>
+									</xs:element>
+									<xs:element name="attributes" type="itm-types:GeneralAttributes" minOccurs="0">
+										<xs:annotation>
+											<xs:documentation>Miscellaneous participant attributes</xs:documentation>
+										</xs:annotation>
+									</xs:element>
+								</xs:sequence>
+								<xs:attribute name="participant-id" use="required">
+									<xs:annotation>
+										<xs:documentation>Participant ID - unique within the interaction participants</xs:documentation>
+									</xs:annotation>
+									<xs:simpleType>
+										<xs:restriction base="xs:string">
+											<xs:minLength value="1"/>
+										</xs:restriction>
+									</xs:simpleType>
+								</xs:attribute>
+								<xs:attribute name="participant-role" default="participant">
+									<xs:annotation>
+										<xs:documentation>Participant role within the interaction</xs:documentation>
+									</xs:annotation>
+									<xs:simpleType>
+										<xs:restriction base="xs:string">
+											<xs:enumeration value="initiator"/>
+											<xs:enumeration value="participant"/>
+											<xs:enumeration value="caller"/>
+											<xs:enumeration value="callee"/>
+											<xs:enumeration value="organizer"/>
+											<xs:enumeration value="presenter"/>
+											<xs:enumeration value="sender"/>
+											<xs:enumeration value="recipient"/>
+											<xs:enumeration value="from"/>
+											<xs:enumeration value="to"/>
+											<xs:enumeration value="cc"/>
+											<xs:enumeration value="bcc"/>
+											<xs:enumeration value="poster"/>
+											<xs:enumeration value="commenter"/>
+											<xs:enumeration value="re-poster"/>
+											<xs:enumeration value="rater"/>
+											<xs:enumeration value="creator"/>
+											<xs:enumeration value="assignee"/>
+											<xs:enumeration value="required invitee"/>
+											<xs:enumeration value="optional invitee"/>
+											<xs:enumeration value="responder"/>
+											<xs:enumeration value="author"/>
+											<xs:enumeration value="owner"/>
+											<xs:enumeration value="follower"/>
+											<xs:enumeration value="subscriber"/>
+											<xs:enumeration value="moderator"/>
+											<xs:enumeration value="reviewer"/>
+											<xs:enumeration value="updater"/>
+											<xs:enumeration value="none"/>
+											<xs:enumeration value="miscellaneous"/>
+										</xs:restriction>
+									</xs:simpleType>
+								</xs:attribute>
+							</xs:complexType>
+						</xs:element>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="file-events" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>File content events</xs:documentation>
+				</xs:annotation>
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="file-event" type="itm:FileEvent" minOccurs="0" maxOccurs="unbounded"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="text-events" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Text content events</xs:documentation>
+				</xs:annotation>
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="text-event" type="itm:TextEvent" minOccurs="0" maxOccurs="unbounded"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="action-events" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>External action events</xs:documentation>
+				</xs:annotation>
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="action-event" type="itm:ActionEvent" minOccurs="0" maxOccurs="unbounded"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="policy-events" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Policy events</xs:documentation>
+				</xs:annotation>
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="policy-event" type="itm:PolicyEvent" minOccurs="0" maxOccurs="unbounded"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+		</xs:sequence>
+		<xs:attribute name="interaction-event-id" type="itm-types:EventID" use="required">
+			<xs:annotation>
+				<xs:documentation>Interaction event ID unique within cluster</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="historical-data-flag" type="xs:boolean" default="false">
+			<xs:annotation>
+				<xs:documentation>True if data is historical, false  when data is current</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="data-state" default="valid">
+			<xs:annotation>
+				<xs:documentation>Indicate interaction is tampered or incomplete.</xs:documentation>
+			</xs:annotation>
+			<xs:simpleType>
+				<xs:restriction base="xs:string">
+					<xs:enumeration value="valid"/>
+					<xs:enumeration value="tampered"/>
+					<xs:enumeration value="incomplete"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+	</xs:complexType>
+	<xs:complexType name="TextObject">
+		<xs:sequence>
+			<xs:element name="text-object-id" type="itm-types:OID">
+				<xs:annotation>
+					<xs:documentation>Text object ID unique within cluster</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="parent-text-object-id" type="itm-types:OID" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Parent text object ID unique within cluster</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="system-flag" type="xs:boolean" default="false" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>System or user content flag</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="text-object-style" type="itm-types:text-event-type">
+				<xs:annotation>
+					<xs:documentation>Text object display style</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="text-object-type" type="xs:string" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Text object type</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="text-object-sub-type" type="xs:string" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Text object sub-type</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="event-time" type="itm-types:TimeStamp">
+				<xs:annotation>
+					<xs:documentation>Text event timestamp in UTC. Must fall within the interaction start-time and end-time values</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="participant-id">
+				<xs:annotation>
+					<xs:documentation>Participant responsible for the text event. Participant-id must appear in the participants list</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:minLength value="1"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="text-object-url" type="xs:anyURI" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>URL to the text object</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="file-event-ids" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Reference to associated file events.</xs:documentation>
+				</xs:annotation>
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="file-event-id" type="itm-types:OID" maxOccurs="unbounded">
+							<xs:annotation>
+								<xs:documentation>File event ID. Must appear in the file-events list</xs:documentation>
+							</xs:annotation>
+						</xs:element>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="link-communication-object-id" type="itm-types:OID" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Reference to another communication object</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="text-content" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Text content</xs:documentation>
+				</xs:annotation>
+				<xs:complexType>
+					<xs:simpleContent>
+						<xs:extension base="xs:string">
+							<xs:attribute name="content-type" type="itm-types:MimeType" default="text/plain">
+								<xs:annotation>
+									<xs:documentation>Text content type</xs:documentation>
+								</xs:annotation>
+							</xs:attribute>
+							<xs:attribute ref="itm-types:indexable"/>
+							<xs:attribute name="user-visible" type="itm-types:UserVisibility" default="always visible">
+								<xs:annotation>
+									<xs:documentation>User visibility setting</xs:documentation>
+								</xs:annotation>
+							</xs:attribute>
+						</xs:extension>
+					</xs:simpleContent>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="attributes" type="itm-types:IndexableAttributes" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Miscellaneous text attributes</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="lexicon-hits" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Lexicon hits in this text object</xs:documentation>
+				</xs:annotation>
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="lexicon-hit" type="itm-types:LexiconHit" maxOccurs="unbounded"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="TextEvent">
+		<xs:sequence>
+			<xs:element name="text-object" type="itm:TextObject"/>
+		</xs:sequence>
+		<xs:attribute name="text-event-id" type="itm-types:EventID" use="required">
+			<xs:annotation>
+				<xs:documentation>Text event ID unique within communication object</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="action" type="itm-types:Action" default="create">
+			<xs:annotation>
+				<xs:documentation>Text event action</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="operation" type="xs:string">
+			<xs:annotation>
+				<xs:documentation>Operation on text defined by the point-product</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="history-flag" type="xs:boolean" default="false">
+			<xs:annotation>
+				<xs:documentation>Flag that is used when a contextual or history text event needs to be included in an interaction that is outside of the interaction’s time frame. </xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+	</xs:complexType>
+	<xs:complexType name="FileObject">
+		<xs:sequence>
+			<xs:element name="file-object-id" type="itm-types:OID">
+				<xs:annotation>
+					<xs:documentation>File object ID unique within cluster</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="parent-file-object-id" type="itm-types:OID" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Parent file object ID unique within cluster</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="event-time" type="itm-types:TimeStamp" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>File event timestamp in UTC. Must fall within the interaction start-time and end-time values</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="participant-id">
+				<xs:annotation>
+					<xs:documentation>Participant responsible for the file event. Participant-id must appear in the participants list</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:minLength value="1"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="file-object-url" type="xs:anyURI" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>URL to file object</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="file-content" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>File content</xs:documentation>
+				</xs:annotation>
+				<xs:complexType>
+					<xs:simpleContent>
+						<xs:extension base="xs:base64Binary">
+							<xs:attribute name="file-path" type="xs:anyURI">
+								<xs:annotation>
+									<xs:documentation>File path</xs:documentation>
+								</xs:annotation>
+							</xs:attribute>
+							<xs:attribute name="name" type="xs:string">
+								<xs:annotation>
+									<xs:documentation>File name</xs:documentation>
+								</xs:annotation>
+							</xs:attribute>
+							<xs:attribute name="content-type" type="xs:string" default="text/plain">
+								<xs:annotation>
+									<xs:documentation>File content type</xs:documentation>
+								</xs:annotation>
+							</xs:attribute>
+							<xs:attribute name="encoding" type="itm-types:Encoding" default="base64">
+								<xs:annotation>
+									<xs:documentation>File content encoding</xs:documentation>
+								</xs:annotation>
+							</xs:attribute>
+							<xs:attribute ref="itm-types:indexable"/>
+							<xs:attribute name="user-visible" type="itm-types:UserVisibility" default="always visible">
+								<xs:annotation>
+									<xs:documentation>User visibility setting</xs:documentation>
+								</xs:annotation>
+							</xs:attribute>
+						</xs:extension>
+					</xs:simpleContent>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="attributes" type="itm-types:IndexableAttributes" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Miscellaneous file attributes</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="lexicon-hits" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Lexicon hits in this file object</xs:documentation>
+				</xs:annotation>
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="lexicon-hit" type="itm-types:LexiconHit" maxOccurs="unbounded"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="FileEvent">
+		<xs:sequence>
+			<xs:element name="file-object" type="itm:FileObject"/>
+		</xs:sequence>
+		<xs:attribute name="file-event-id" type="itm-types:EventID" use="required">
+			<xs:annotation>
+				<xs:documentation>File event ID unique within communication object</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="file-event-type" type="itm-types:FileEventType" use="required">
+			<xs:annotation>
+				<xs:documentation>File event type</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="action" type="itm-types:Action" default="create">
+			<xs:annotation>
+				<xs:documentation>File event action</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="history-flag" type="xs:boolean" default="false">
+			<xs:annotation>
+				<xs:documentation>Flag that is used when a contextual or history file event needs to be included in an interaction that is outside of the interaction’s time frame. </xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+	</xs:complexType>
+	<xs:complexType name="ActionEvent">
+		<xs:sequence>
+			<xs:element name="action-type">
+				<xs:annotation>
+					<xs:documentation>Action event type</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:enumeration value="block"/>
+						<xs:enumeration value="moderate"/>
+						<xs:enumeration value="add x-headers"/>
+						<xs:enumeration value="modify subject"/>
+						<xs:enumeration value="add disclaimer"/>
+						<xs:enumeration value="copy message"/>
+						<xs:enumeration value="move message"/>
+						<xs:enumeration value="notify message"/>
+						<xs:enumeration value="notify originator"/>
+						<xs:enumeration value="update recipients"/>
+						<xs:enumeration value="archive"/>
+						<xs:enumeration value="review"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="action-sub-type" type="xs:string" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Action event sub-type</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="action-state" type="xs:string" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Action event state</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="policy" type="xs:string" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Policy that triggered the action</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="event-time" type="itm-types:TimeStamp" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Action event timestamp in UTC</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="actor-participant-ids">
+				<xs:annotation>
+					<xs:documentation>Participants responsible for the action event</xs:documentation>
+				</xs:annotation>
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="actor-participant-id" maxOccurs="unbounded">
+							<xs:annotation>
+								<xs:documentation>Actor participant id. Participant-id must appear in the participants list</xs:documentation>
+							</xs:annotation>
+							<xs:simpleType>
+								<xs:restriction base="xs:string">
+									<xs:minLength value="1"/>
+								</xs:restriction>
+							</xs:simpleType>
+						</xs:element>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="assignee-participant-ids" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Participants assigned in the action event</xs:documentation>
+				</xs:annotation>
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="assignee-participant-id" maxOccurs="unbounded">
+							<xs:annotation>
+								<xs:documentation>Assignee participant id. Participant-id must appear in the participants list</xs:documentation>
+							</xs:annotation>
+							<xs:simpleType>
+								<xs:restriction base="xs:string">
+									<xs:minLength value="1"/>
+								</xs:restriction>
+							</xs:simpleType>
+						</xs:element>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element ref="itm-types:subject" minOccurs="0"/>
+			<xs:element name="text-content" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Text content</xs:documentation>
+				</xs:annotation>
+				<xs:complexType>
+					<xs:simpleContent>
+						<xs:extension base="xs:string">
+							<xs:attribute name="content-type" type="itm-types:MimeType" default="text/plain">
+								<xs:annotation>
+									<xs:documentation>Text content type</xs:documentation>
+								</xs:annotation>
+							</xs:attribute>
+						</xs:extension>
+					</xs:simpleContent>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="attributes" type="itm-types:IndexableAttributes" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Miscellaneous action attributes</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+		<xs:attribute name="action-event-id" type="itm-types:EventID" use="required">
+			<xs:annotation>
+				<xs:documentation>Action event ID unique within the communication object</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="parent-action-event-id" type="itm-types:EventID">
+			<xs:annotation>
+				<xs:documentation>Parent action event ID </xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+	</xs:complexType>
+	<xs:complexType name="PolicyEvent">
+		<xs:sequence>
+			<xs:element name="policy-event-type">
+				<xs:annotation>
+					<xs:documentation>Policy event type</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:minLength value="1"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="policy-event-sub-type" type="xs:string" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Policy event sub-type</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="policy-event-category">
+				<xs:annotation>
+					<xs:documentation>Policy event category</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:enumeration value="permission"/>
+						<xs:enumeration value="ethical wall"/>
+						<xs:enumeration value="flagged content"/>
+						<xs:enumeration value="blocked content"/>
+						<xs:enumeration value="challenged content"/>
+						<xs:enumeration value="infected content"/>
+						<xs:enumeration value="moderated content"/>
+						<xs:enumeration value="alerted content"/>
+						<xs:enumeration value="size limit exceeded"/>
+						<xs:enumeration value="content type"/>
+						<xs:enumeration value="miscellaneous"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="event-time" type="itm-types:TimeStamp">
+				<xs:annotation>
+					<xs:documentation>Policy event timestamp in UTC. Must fall within the interaction start-time and end-time values</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="triggering-participant-ids">
+				<xs:annotation>
+					<xs:documentation>Participants responsible for triggering the policy event.</xs:documentation>
+				</xs:annotation>
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="triggering-participant-id" maxOccurs="unbounded">
+							<xs:annotation>
+								<xs:documentation>Triggering participant id. Participant-id must appear in the participants list </xs:documentation>
+							</xs:annotation>
+							<xs:simpleType>
+								<xs:restriction base="xs:string">
+									<xs:minLength value="1"/>
+								</xs:restriction>
+							</xs:simpleType>
+						</xs:element>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="policy" type="xs:string" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Policy that was triggered</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="action-event-ids" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Action events triggered by this policy event</xs:documentation>
+				</xs:annotation>
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="action-event-id" type="itm-types:EventID" maxOccurs="unbounded">
+							<xs:annotation>
+								<xs:documentation>Action event ID. Must appear in the action-events list</xs:documentation>
+							</xs:annotation>
+						</xs:element>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="triggering-text-event-ids" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Policy events triggered by these text events</xs:documentation>
+				</xs:annotation>
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="text-event-id" type="itm-types:EventID" maxOccurs="unbounded">
+							<xs:annotation>
+								<xs:documentation>Text event ID. Must appear in the text-events list</xs:documentation>
+							</xs:annotation>
+						</xs:element>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="triggering-file-event-ids" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Policy events triggered by these file events</xs:documentation>
+				</xs:annotation>
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="file-event-id" type="itm-types:EventID" maxOccurs="unbounded">
+							<xs:annotation>
+								<xs:documentation>File event ID. Must appear in the file-events list</xs:documentation>
+							</xs:annotation>
+						</xs:element>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="text-content" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Text content describing how the policy was triggered</xs:documentation>
+				</xs:annotation>
+				<xs:complexType>
+					<xs:simpleContent>
+						<xs:extension base="xs:string">
+							<xs:attribute name="content-type" type="itm-types:MimeType" default="text/plain">
+								<xs:annotation>
+									<xs:documentation>Text content type</xs:documentation>
+								</xs:annotation>
+							</xs:attribute>
+						</xs:extension>
+					</xs:simpleContent>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="attributes" type="itm-types:IndexableAttributes" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Miscellaneous policy event attributes</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+		<xs:attribute name="policy-event-id" type="itm-types:EventID" use="required">
+			<xs:annotation>
+				<xs:documentation>Policy event ID unique within the communication object</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="history-flag" type="xs:boolean" default="false">
+			<xs:annotation>
+				<xs:documentation>Flag that is used when a contextual or history policy event needs to be included in an interaction that is outside of the interaction’s time frame. </xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+	</xs:complexType>
+</xs:schema>
+

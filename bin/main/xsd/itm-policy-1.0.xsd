@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<!--
+	schema design:							John Onusko, Architect
+	schema transform and updates:	Jeffrey T. Lucas, Architect
+
+	This schema is used by APC-DIG. It is a primary object model for specifying the policies corresponding to the interaction.
+-->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:cmn-adt-base="http://dig.apc.xmlns.commons.platform.actiance.com/cmn/types/1.0" xmlns:pol="http://dig.apc.xmlns.commons.platform.actiance.com/itm/interaction/policy/1.0" targetNamespace="http://dig.apc.xmlns.commons.platform.actiance.com/itm/interaction/policy/1.0" elementFormDefault="qualified" attributeFormDefault="unqualified">
+	<xs:element name="policy" type="pol:transcript-policy"/>
+	<xs:complexType name="transcript-policy">
+		<xs:sequence>
+			<xs:element name="retention">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="policy" minOccurs="0" maxOccurs="unbounded">
+							<xs:complexType>
+								<xs:attribute name="action" type="xs:string" use="required"/>
+								<xs:attribute name="description" use="optional"/>
+								<xs:attribute name="id" type="xs:ID"/>
+							</xs:complexType>
+						</xs:element>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="disposition"/>
+		</xs:sequence>
+	</xs:complexType>
+</xs:schema>
